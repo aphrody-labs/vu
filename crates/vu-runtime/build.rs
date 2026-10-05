@@ -7,9 +7,13 @@ use std::fs;
 
 fn main() {
     println!("cargo:rerun-if-env-changed=PYO3_CONFIG_FILE");
-    let Some(path) = env::var_os("PYO3_CONFIG_FILE") else { return };
+    let Some(path) = env::var_os("PYO3_CONFIG_FILE") else {
+        return;
+    };
     println!("cargo:rerun-if-changed={}", path.to_string_lossy());
-    let Ok(config) = fs::read_to_string(&path) else { return };
+    let Ok(config) = fs::read_to_string(&path) else {
+        return;
+    };
     for line in config.lines() {
         if let Some(directory) = line.strip_prefix("lib_dir=") {
             println!("cargo:rustc-link-arg=-Wl,-rpath,{directory}");

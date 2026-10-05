@@ -124,6 +124,10 @@ fn version(prefix: &Path, json: bool) {
             json_string(TARGET),
         );
     } else {
-        println!("vu {VERSION} ({uv}; {ruff}; CPython {} through PyO3 {}; {TARGET})", python.version, vu_runtime::PYO3_VERSION);
+        println!(
+            "vu {VERSION} ({uv}; {ruff}; CPython {} through PyO3 {}; {TARGET})",
+            python.version,
+            vu_runtime::PYO3_VERSION
+        );
     }
 }

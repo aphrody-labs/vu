@@ -111,13 +111,19 @@ mod tests {
     #[test]
     fn nul_bytes_are_refused_before_the_interpreter_starts() {
         let bad = OsString::from_vec(vec![b'a', 0, b'b']);
-        assert_eq!(run_python(OsStr::new("python3"), &[bad]), Err(RuntimeError::NulInArgument));
+        assert_eq!(
+            run_python(OsStr::new("python3"), &[bad]),
+            Err(RuntimeError::NulInArgument)
+        );
     }
 
     #[test]
     fn the_interpreter_comes_first_in_the_argument_vector() {
-        let owned = c_arguments(OsStr::new("/p/bin/python3"), &[OsString::from("-c"), OsString::from("1")])
-            .expect("plain arguments");
+        let owned = c_arguments(
+            OsStr::new("/p/bin/python3"),
+            &[OsString::from("-c"), OsString::from("1")],
+        )
+        .expect("plain arguments");
         let texts: Vec<&str> = owned.iter().map(|c| c.to_str().expect("utf-8")).collect();
         assert_eq!(texts, ["/p/bin/python3", "-c", "1"]);
     }

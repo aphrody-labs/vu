@@ -52,8 +52,18 @@ mod tests {
     fn the_runtime_bin_comes_first_in_path() {
         let path = path_with(Path::new("/opt/vu"), Some(OsString::from("/usr/bin:/bin")));
         let entries: Vec<PathBuf> = env::split_paths(&path).collect();
-        assert_eq!(entries, [PathBuf::from("/opt/vu/bin"), PathBuf::from("/usr/bin"), PathBuf::from("/bin")]);
+        assert_eq!(
+            entries,
+            [
+                PathBuf::from("/opt/vu/bin"),
+                PathBuf::from("/usr/bin"),
+                PathBuf::from("/bin")
+            ]
+        );
         let alone = path_with(Path::new("/opt/vu"), None);
-        assert_eq!(env::split_paths(&alone).collect::<Vec<_>>(), [PathBuf::from("/opt/vu/bin")]);
+        assert_eq!(
+            env::split_paths(&alone).collect::<Vec<_>>(),
+            [PathBuf::from("/opt/vu/bin")]
+        );
     }
 }
