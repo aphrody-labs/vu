@@ -1,0 +1,4 @@
+# PyO3 reads the pinned CPython (python-build-standalone) from the file written by `bun scripts/fetch.ts`.
+# The path is relative to the repository root (the parent of this directory).
+[env]
+PYO3_CONFIG_FILE = { value = "build/pyo3-config.txt", relative = true }

@@ -1,0 +1,7 @@
+# Build outputs and fetched inputs: nothing here is source.
+/target/
+/vendor/
+/build/
+/dist/
+*.tar.zst
+*.partial

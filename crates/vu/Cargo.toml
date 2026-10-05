@@ -1,0 +1,17 @@
+# SPDX-License-Identifier: Apache-2.0
+[package]
+name = "vu"
+description = "The vu runtime launcher: pinned uv and ruff sidecars and an embedded CPython."
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+authors.workspace = true
+publish = false
+
+[dependencies]
+vu-runtime = { workspace = true }
+
+[lints]
+workspace = true

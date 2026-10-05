@@ -1,0 +1,128 @@
+{
+  "schemaVersion": 1,
+  "description": "Pins of the vu monorepo (planned repository aphrody-labs/vu), written like config/vendor.json: sources are fetched on demand, shallow and blobless, never vendored into Git. Each pin is an exact commit of an aphrody-labs fork whose branch `vu-pin-<version>` was created at the upstream release commit on 2026-10-05; the same facts are recorded in config/upstream-sources.json (ids vu-uv, vu-ruff, vu-pyo3, vu-python-build-standalone). `scripts/audit/workspace/vu-pins.ts` checks both files against each other and, with --online, against GitHub.",
+  "sources": [
+    {
+      "name": "uv",
+      "path": "vendor/uv",
+      "url": "https://github.com/aphrody-labs/uv.git",
+      "upstream": "https://github.com/astral-sh/uv.git",
+      "upstreamTag": "0.12.23",
+      "ref": "46b84fd0bfec23b72f29e8e2185ba68a65052f48",
+      "forkBranch": "vu-pin-0.12.23",
+      "license": "MIT OR Apache-2.0",
+      "workspace": {
+        "edition": "2024",
+        "rustVersion": "1.97.0",
+        "upstreamToolchain": "1.99.0",
+        "members": "crates/*",
+        "cargoLockPackages": {
+          "registry": 664,
+          "path": 73,
+          "git": 0
+        },
+        "cargoLockBlob": "357c05bc89a3ed1b3aef2bf4d6354bec1a35b49c"
+      },
+      "cratesIo": {
+        "uv": "0.12.23",
+        "uv-*": "0.0.90",
+        "cargoVcsInfoSha1": "46b84fd0bfec23b72f29e8e2185ba68a65052f48"
+      },
+      "libraryEntrypoint": "uv::main(args) -> ExitCode (pub unsafe fn, crates/uv/src/lib.rs); uv::run(cli, GlobalInitialization)"
+    },
+    {
+      "name": "ruff",
+      "path": "vendor/ruff",
+      "url": "https://github.com/aphrody-labs/ruff.git",
+      "upstream": "https://github.com/astral-sh/ruff.git",
+      "upstreamTag": "0.16.10",
+      "ref": "3265ed1f944c98bb4c04d632fbefb1257cdb583d",
+      "forkBranch": "vu-pin-0.16.10",
+      "license": "MIT",
+      "workspace": {
+        "edition": "2024",
+        "rustVersion": "1.97",
+        "upstreamToolchain": "1.99.0",
+        "members": "crates/*",
+        "cargoLockPackages": {
+          "registry": 505,
+          "path": 53,
+          "git": 0
+        },
+        "cargoLockBlob": "af0a09d8590efe4f55cf36fc018c9a13cd02962e"
+      },
+      "cratesIo": {
+        "ruff": "0.16.10",
+        "ruff_linter": "0.16.10",
+        "ruff_*": "0.0.16",
+        "ty_python_semantic": "0.0.16",
+        "cargoVcsInfoSha1": "3265ed1f944c98bb4c04d632fbefb1257cdb583d"
+      },
+      "libraryEntrypoint": "ruff::run(Args) -> Result<ExitStatus> (pub fn, crates/ruff/src/lib.rs); installs a global panic hook",
+      "note": "ty lives in this repository (crates/ty*, the ty crate is version 0.0.0 and publish = false). ty 0.0.84 vendors ruff 11aaa39f84c0c44bdfb4c9cc21e4038c6f74c00a, 107 commits behind this pin; no separate branch is created."
+    },
+    {
+      "name": "pyo3",
+      "path": "vendor/pyo3",
+      "url": "https://github.com/aphrody-labs/pyo3.git",
+      "upstream": "https://github.com/PyO3/pyo3.git",
+      "upstreamTag": "v0.29.3",
+      "ref": "451d99fdcdcddf159e8e0a1186960b332cdb5d7c",
+      "forkBranch": "vu-pin-0.29.3",
+      "license": "MIT OR Apache-2.0",
+      "workspace": {
+        "edition": "2021",
+        "rustVersion": "1.83"
+      },
+      "cratesIo": {
+        "pyo3": "0.29.3",
+        "pyo3-ffi": "0.29.3",
+        "cargoVcsInfoSha1": "451d99fdcdcddf159e8e0a1186960b332cdb5d7c"
+      },
+      "note": "Same version as the Aphrody workspace Cargo.lock (0.29.3), so the aphrody_rust extension and the vu runtime share one PyO3."
+    }
+  ],
+  "releases": [
+    {
+      "name": "python-build-standalone",
+      "url": "https://github.com/astral-sh/python-build-standalone",
+      "tag": "20261003",
+      "commit": "5e46737f6480fc315ebfea83866910cbfcc772f0",
+      "license": "MPL-2.0 (build system); the distributions carry CPython (PSF-2.0) and the licences of their bundled libraries",
+      "python": ["3.12.15", "3.14.8"],
+      "target": "x86_64-unknown-linux-gnu",
+      "assets": [
+        {
+          "python": "3.12.15",
+          "role": "runtime tree (install_only_stripped); sha256 equal to the digest pinned by uv 0.12.23 crates/uv-python/download-metadata.json",
+          "name": "cpython-3.12.15+20261003-x86_64-unknown-linux-gnu-install_only_stripped.tar.gz",
+          "sha256": "731af898886c5f821890dc901eca3c651cca8e51fa7308c159d12a1194aeac91",
+          "size": 34285590
+        },
+        {
+          "python": "3.12.15",
+          "role": "link inputs (full archive); digest read from the release API, archive not downloaded",
+          "name": "cpython-3.12.15+20261003-x86_64-unknown-linux-gnu-pgo+lto-full.tar.zst",
+          "sha256": "aaeeeeea4f98a41c7acd7379229a374c201aee45c1954be5788c18af83733d2b",
+          "size": 98372884
+        },
+        {
+          "python": "3.14.8",
+          "role": "runtime tree (install_only_stripped); sha256 equal to the digest pinned by uv 0.12.23 crates/uv-python/download-metadata.json",
+          "name": "cpython-3.14.8+20261003-x86_64-unknown-linux-gnu-install_only_stripped.tar.gz",
+          "sha256": "d9ec7a6935ade8b671a57ebaf111083d7314eab8dae5071d167054dadd2b97d6",
+          "size": 36299485
+        },
+        {
+          "python": "3.14.8",
+          "role": "link inputs (full archive: PYTHON.json version 8, libpython3.14.a and libpython3.14.so.1.0); downloaded and hashed on the VPS",
+          "name": "cpython-3.14.8+20261003-x86_64-unknown-linux-gnu-pgo+lto-full.tar.zst",
+          "sha256": "43b8c1b02e3daefbbbf4b5714b656ea00a5cae24f55c4589fb87468bcac682ed",
+          "size": 111267694
+        }
+      ],
+      "defaultPython": "3.12.15",
+      "defaultPythonReason": "The py/ workspace baseline is CPython 3.12 (py/.python-version; aphrody-train requires >=3.12,<3.13); 3.14.8 is the forward target of the SDK matrix 3.11 to 3.14."
+    }
+  ]
+}

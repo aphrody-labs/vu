@@ -1,0 +1,23 @@
+{
+  "$comment": "The single place where the runtime name is written. Every other name of the vu monorepo (binary, packages, variables, branches, receipts) is a template over `name`; renaming the runtime means changing this value and regenerating the derived names (PLAN section 4.5). Owner decision of 2026-10-05: `vu`, the literal inverse of `uv`. The request first wrote « ir »; that wording is abandoned.",
+  "schemaVersion": 1,
+  "name": "vu",
+  "decision": {
+    "settledBy": "owner",
+    "date": "2026-10-05",
+    "alternativeRejected": "ir"
+  },
+  "derived": {
+    "binary": "{name}",
+    "cargoPackage": "{name}",
+    "runtimeCrate": "{name}-runtime",
+    "environmentPrefix": "{NAME}_",
+    "homeDirectory": "~/.{name}",
+    "repository": "https://github.com/aphrody-labs/{name}",
+    "forkPinBranch": "{name}-pin-{version}",
+    "upstreamSourcesId": "{name}-{source}",
+    "receiptSchema": "aphrody.{name}-forge/1",
+    "artifact": "{name}-runtime-{version}-{sha8}-{target}.tar.zst",
+    "pythonModule": "{name}"
+  }
+}

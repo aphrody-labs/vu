@@ -1,0 +1,17 @@
+vu
+Copyright 2026 aphrody-dev <contact@aphrody.com>
+
+The code of this repository is licensed under the Apache License 2.0 (LICENSE).
+
+The runtime artifact built from it bundles the following components, each under its own licence; the licence files
+of the parts are copied into share/vu/licenses of every artifact:
+
+- uv (https://github.com/astral-sh/uv, fork aphrody-labs/uv), MIT OR Apache-2.0. The crates uv-pep440 and uv-pep508
+  are Apache-2.0 OR BSD-2-Clause; astral-pubgrub, a dependency of uv, is MPL-2.0.
+- ruff (https://github.com/astral-sh/ruff, fork aphrody-labs/ruff), MIT.
+- PyO3 (https://github.com/PyO3/pyo3, fork aphrody-labs/pyo3), MIT OR Apache-2.0.
+- python-build-standalone distributions (https://github.com/astral-sh/python-build-standalone): the build system is
+  MPL-2.0; the distribution carries CPython (Python Software Foundation License 2.0) and the licences of the
+  libraries it bundles (OpenSSL, SQLite, zlib, bzip2, xz, libffi, expat, ncurses, readline and others).
+
+The pins of every component are in vendor.json and in the manifest of each artifact.

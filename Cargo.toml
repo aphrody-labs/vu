@@ -1,0 +1,43 @@
+# SPDX-License-Identifier: Apache-2.0
+# Workspace of the vu runtime launcher and the CPython embedding.
+#
+# The sidecars `uv` and `ruff` (tier T0) are built from their own fork checkouts with their own upstream locks
+# (`cargo build --locked --manifest-path vendor/<name>/Cargo.toml -p <name>`) and are neither members nor
+# dependencies of this workspace. PyO3 is used by path from the pinned fork checkout, so a patch can be carried
+# on the fork branch.
+
+[workspace]
+resolver = "3"
+members = ["crates/vu", "crates/vu-runtime"]
+# The forks are workspaces of their own: they are built or used by path only.
+exclude = ["vendor"]
+
+[workspace.package]
+edition = "2024"
+rust-version = "1.98"
+license = "Apache-2.0"
+repository = "https://github.com/aphrody-labs/vu"
+authors = ["aphrody-dev <contact@aphrody.com>"]
+version = "0.1.0"
+
+[workspace.dependencies]
+# Pinned fork checkout (branch vu-pin-0.29.3). Embedding: `auto-initialize`; the deprecated `extension-module`
+# feature is not used. `pyo3::ffi` is pyo3-ffi (Py_BytesMain).
+pyo3 = { path = "vendor/pyo3", version = "=0.29.3", default-features = false, features = ["macros", "auto-initialize"] }
+vu-runtime = { path = "crates/vu-runtime" }
+
+[workspace.lints.rust]
+unsafe_op_in_unsafe_fn = "deny"
+
+[workspace.lints.clippy]
+all = { level = "warn", priority = -1 }
+
+[profile.release]
+# Same shape as the uv and ruff release profiles. panic = "abort" is the upstream choice for both CLIs.
+lto = "fat"
+codegen-units = 1
+panic = "abort"
+strip = true
+
+[profile.dev]
+debug = "line-tables-only"

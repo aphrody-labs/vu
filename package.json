@@ -1,0 +1,12 @@
+{
+  "name": "vu",
+  "private": true,
+  "description": "Build scripts of the vu runtime (Bun). The runtime itself is the Rust workspace.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "scripts": {
+    "test": "bun test scripts",
+    "fetch": "bun scripts/fetch.ts",
+    "assemble": "bun scripts/assemble.ts"
+  }
+}

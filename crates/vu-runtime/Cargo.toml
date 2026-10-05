@@ -1,0 +1,17 @@
+# SPDX-License-Identifier: Apache-2.0
+[package]
+name = "vu-runtime"
+description = "Embedded CPython for the vu runtime, through PyO3."
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+authors.workspace = true
+publish = false
+
+[dependencies]
+pyo3 = { workspace = true }
+
+[lints]
+workspace = true

@@ -1,0 +1,9 @@
+# SPDX-License-Identifier: Apache-2.0
+# The Aphrody Rust channel, above the minimum of uv (1.97.0), ruff (1.97) and PyO3 (1.83). uv and ruff pin 1.99.0
+# in their own rust-toolchain.toml; that file only applies when cargo is run inside their checkout, and the
+# sidecars are built from this directory with this channel (the receipt records the toolchain).
+[toolchain]
+channel = "1.98.1"
+components = ["rustfmt", "clippy"]
+targets = ["x86_64-unknown-linux-gnu"]
+profile = "minimal"
