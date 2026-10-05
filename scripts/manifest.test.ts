@@ -11,7 +11,13 @@ import {
 } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { buildManifest, MANIFEST_PATH, type ManifestMeta, verifyManifest } from "./manifest.ts";
+import {
+  buildManifest,
+  isDerivedPath,
+  MANIFEST_PATH,
+  type ManifestMeta,
+  verifyManifest,
+} from "./manifest.ts";
 
 const meta: ManifestMeta = {
   schema: 1,
@@ -75,6 +81,22 @@ describe("manifest", () => {
     expect(problems).toContain("missing: lib/libpython3.12.so.1.0");
     expect(problems).toContain("unlisted: extra.txt");
     expect(problems).toContain("link target: lib/libpython3.12.so");
+  });
+
+  test("bytecode caches are derived data: never listed, never required, never flagged", async () => {
+    expect(isDerivedPath("lib/python3.12/__pycache__/os.cpython-312.pyc")).toBe(true);
+    expect(isDerivedPath("__pycache__/x.pyc")).toBe(true);
+    expect(isDerivedPath("lib/python3.12/os.py")).toBe(false);
+    expect(isDerivedPath("lib/my__pycache__/x")).toBe(false);
+    const dir = prefix();
+    mkdirSync(join(dir, "lib", "__pycache__"), { recursive: true });
+    writeFileSync(join(dir, "lib", "__pycache__", "a.cpython-312.pyc"), "before");
+    const manifest = await buildManifest(dir, meta);
+    expect(Object.keys(manifest.files).some((path) => path.includes("__pycache__"))).toBe(false);
+    // CPython writes and rewrites caches while the runtime is used.
+    writeFileSync(join(dir, "lib", "__pycache__", "a.cpython-312.pyc"), "after, longer");
+    writeFileSync(join(dir, "lib", "__pycache__", "b.cpython-312.pyc"), "new");
+    expect(await verifyManifest(dir, manifest)).toEqual([]);
   });
 
   test("another schema or name is refused", async () => {

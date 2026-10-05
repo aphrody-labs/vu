@@ -118,6 +118,8 @@ export async function mapLimit<T, R>(
   let next = 0;
   const worker = async (): Promise<void> => {
     for (let index = next++; index < items.length; index = next++) {
+      // The workers are the concurrency: each one runs its items in sequence.
+      // eslint-disable-next-line no-await-in-loop
       results[index] = await fn(items[index] as T);
     }
   };

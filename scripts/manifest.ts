@@ -9,6 +9,14 @@ import { mapLimit, sha256File } from "./lib.ts";
 
 export const MANIFEST_PATH = "share/vu/manifest.json";
 
+/**
+ * Bytecode caches are derived data: CPython writes them into the runtime when it runs, so they are neither listed
+ * in the manifest nor checked by a consumer (the sources and the binaries they derive from are).
+ */
+export function isDerivedPath(path: string): boolean {
+  return /(^|\/)__pycache__\//.test(path);
+}
+
 export interface FileEntry {
   sha256: string;
   bytes: number;
@@ -48,7 +56,7 @@ export async function buildManifest(prefix: string, meta: ManifestMeta): Promise
   walk(prefix, prefix, listing);
   const files: Record<string, FileEntry> = {};
   const entries = await mapLimit(
-    listing.files.filter((path) => path !== MANIFEST_PATH),
+    listing.files.filter((path) => path !== MANIFEST_PATH && !isDerivedPath(path)),
     32,
     async (path) => {
       const stat = lstatSync(join(prefix, path));
@@ -76,7 +84,9 @@ export async function verifyManifest(prefix: string, manifest?: Manifest): Promi
     return ["unsupported manifest schema or name"];
   const listing = { files: [] as string[], links: [] as string[] };
   walk(prefix, prefix, listing);
-  const present = new Set(listing.files.filter((path) => path !== MANIFEST_PATH));
+  const present = new Set(
+    listing.files.filter((path) => path !== MANIFEST_PATH && !isDerivedPath(path)),
+  );
   for (const [path, entry] of Object.entries(declared.files)) {
     if (!present.has(path)) {
       problems.push(`missing: ${path}`);

@@ -44,7 +44,13 @@ export function smokePlan(
   options: SmokeOptions,
 ): { name: string; run: () => Promise<{ ok: boolean; detail: string }> }[] {
   const bin = (name: string): string => join(prefix, "bin", name);
-  const environment = { VU_RUNTIME: prefix, UV_PYTHON_DOWNLOADS: "never", UV_NO_CONFIG: "1" };
+  // The artifact must stay pristine while it is checked: no bytecode caches are written into it.
+  const environment = {
+    VU_RUNTIME: prefix,
+    UV_PYTHON_DOWNLOADS: "never",
+    UV_NO_CONFIG: "1",
+    PYTHONDONTWRITEBYTECODE: "1",
+  };
   return [
     {
       name: "manifest",
