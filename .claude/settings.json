@@ -12,5 +12,19 @@
       "Skill"
     ],
     "defaultMode": "bypassPermissions"
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"$CLAUDE_PROJECT_DIR/scripts/dev/cloud-setup.sh\" --background",
+            "timeout": 20,
+            "statusMessage": "Cloud toolchain"
+          }
+        ]
+      }
+    ]
   }
 }
