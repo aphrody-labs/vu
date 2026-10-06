@@ -1,0 +1,43 @@
+{
+  "schema": "aphrody.vu-bench-kernels/1",
+  "at": "2026-10-06T18:59:09.223Z",
+  "shape": [
+    20000,
+    384
+  ],
+  "method": "scripts/bench-kernels.py, best of 7 in-process runs, same host, wheels installed with the runtime's uv",
+  "wheels": {
+    "before": {
+      "sha256": "300b3b325f3a978b03f0b6167207146ea22d89b537f6ea84802dfeba2c5d2b5a",
+      "bytes": 788601
+    },
+    "sequentialFlat": {
+      "sha256": "49035292f286ee66a5c2c7035cfee0f09ae24af9882b6eafad2d21b1b94bf2da",
+      "bytes": 789714
+    },
+    "after": {
+      "sha256": "31331a732b4ef69e74824049fabcc5f587313fb0cf252f12dab0cd3adfcfa5ad",
+      "bytes": 816165
+    }
+  },
+  "results": {
+    "normalize_ms": {
+      "numpy": 7.1,
+      "rustBefore": 47.5,
+      "rustSequentialFlat": 31.1,
+      "rustAfter": 23,
+      "speedupVersusBefore": 2.06,
+      "versusNumpy": "numpy 3.2 times faster"
+    },
+    "similarities_ms": {
+      "numpy": 7.9,
+      "rust": 5.3,
+      "note": "unchanged kernel; 1.5 times faster than numpy"
+    }
+  },
+  "interpreters": {
+    "before": "3.12.3 (Ubuntu)",
+    "after": "3.12.15 (runtime)",
+    "withinPercent": 2
+  }
+}
