@@ -1,0 +1,126 @@
+{
+  "schema": "aphrody.vu-forge/1",
+  "startedAt": "2026-10-06T17:01:18.677Z",
+  "finishedAt": "2026-10-06T17:49:42.568Z",
+  "ok": true,
+  "revision": "cf385dd26dda1b2518116bd979e19f256aa5a954",
+  "head": "4f688bbd9002a086dd0e8f314d44db65d3dae3b6",
+  "dirty": true,
+  "host": "vps",
+  "toolchain": "rustc 1.98.1 (48a229cea 2026-09-01)",
+  "pins": {
+    "uv": {
+      "tag": "0.12.23",
+      "ref": "46b84fd0bfec23b72f29e8e2185ba68a65052f48"
+    },
+    "ruff": {
+      "tag": "0.16.10",
+      "ref": "3265ed1f944c98bb4c04d632fbefb1257cdb583d"
+    },
+    "pyo3": {
+      "tag": "v0.29.3",
+      "ref": "451d99fdcdcddf159e8e0a1186960b332cdb5d7c"
+    }
+  },
+  "steps": [
+    {
+      "name": "tunnel",
+      "ok": true,
+      "ms": 13
+    },
+    {
+      "name": "sync",
+      "ok": true,
+      "ms": 766,
+      "detail": "cf385dd26dda"
+    },
+    {
+      "name": "vu",
+      "ok": true,
+      "ms": 2292366
+    },
+    {
+      "name": "test",
+      "ok": true,
+      "ms": 330225
+    },
+    {
+      "name": "clippy",
+      "ok": true,
+      "ms": 258926
+    },
+    {
+      "name": "assemble",
+      "ok": true,
+      "ms": 18400,
+      "detail": "/srv/aphrody-build/artifacts/vu/0.1.0-cf385dd2"
+    },
+    {
+      "name": "smoke",
+      "ok": true,
+      "ms": 3057
+    }
+  ],
+  "artifact": {
+    "artifact": "/srv/aphrody-build/artifacts/vu/0.1.0-cf385dd2",
+    "files": 3491,
+    "links": 1049
+  },
+  "smoke": {
+    "ok": true,
+    "checks": [
+      {
+        "name": "manifest",
+        "ok": true,
+        "detail": "every file matches",
+        "ms": 1474
+      },
+      {
+        "name": "version",
+        "ok": true,
+        "detail": "{\"schema\":\"aphrody.vu/1\",\"vu\":\"0.1.0\",\"uv\":\"uv 0.12.23 (46b84fd0b 2026-10-03 x86_64-unknown-linux-gnu)\",\"ruff\":\"ruff 0.16.10\",\"python\":\"3.12.15\",\"pyo3\":\"0.29.3\",\"target\":\"x86_64-unknown-linux-gnu\"}",
+        "ms": 37
+      },
+      {
+        "name": "uv sidecar",
+        "ok": true,
+        "detail": "uv 0.12.23 (46b84fd0b 2026-10-03 x86_64-unknown-linux-gnu)",
+        "ms": 21
+      },
+      {
+        "name": "ruff sidecar",
+        "ok": true,
+        "detail": "ruff 0.16.10; check exit 1",
+        "ms": 25
+      },
+      {
+        "name": "python parity",
+        "ok": true,
+        "detail": "identical sys.version, sys.prefix, sys.executable, sys.path and extension modules",
+        "ms": 445
+      },
+      {
+        "name": "python exit status and stdin",
+        "ok": true,
+        "detail": "exit 7, stdin result 42",
+        "ms": 46
+      },
+      {
+        "name": "sdk wheel through the sidecar uv and the embedded interpreter",
+        "ok": true,
+        "detail": "aphrody.aphrody_rust.cosine_similarity returned 1.0 inside vu python",
+        "ms": 808
+      },
+      {
+        "name": "glibc audit",
+        "ok": true,
+        "detail": "vu: 2.39, uv: 2.39, ruff: 2.39, libpython3.12.so.1.0: 2.17; highest 2.39; within 2.39",
+        "ms": 53
+      }
+    ],
+    "wheel": {
+      "path": "/srv/aphrody-build/artifacts/wsl/ir-wheel/dist/aphrody-0.1.0-cp311-abi3-linux_x86_64.whl",
+      "sha256": "f90db352507324e5c55ea3c9e0d646e1ba2704f3102d946cce3ea791baf44eee"
+    }
+  }
+}

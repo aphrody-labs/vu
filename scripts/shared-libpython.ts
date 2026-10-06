@@ -35,27 +35,49 @@ const cstr = (text: string): Uint8Array => new TextEncoder().encode(`${text}\0`)
  * Runs `code` inside the runtime's libpython loaded into this process and returns what the code wrote to the result
  * file (`RESULT_PATH` in its globals). Python is initialised once per process; call it in a child process in tests.
  */
-export function runInSharedPython(artifact: string, code: string, site?: string): SharedResult {
+export interface SharedOptions {
+  /**
+   * Promote the mapping to global from inside Python (`ctypes`). The default is true because stock Bun maps with
+   * RTLD_LOCAL; with the yolo fork (`dlopen(..., { global: true })`) pass false to prove no promotion is needed.
+   */
+  readonly promote?: boolean;
+}
+
+export function runInSharedPython(
+  artifact: string,
+  code: string,
+  site?: string,
+  options: SharedOptions = {},
+): SharedResult {
   const libpython = findLibpython(artifact);
   if (libpython === null) throw new Error(`no shared libpython under ${artifact}/lib`);
   process.env["PYTHONHOME"] = artifact;
   process.env["PYTHONDONTWRITEBYTECODE"] = "1";
-  const python = dlopen(libpython, {
+  const promote = options.promote ?? true;
+  const symbols = {
     Py_InitializeEx: { args: [FFIType.i32], returns: FFIType.void },
     Py_GetVersion: { args: [], returns: FFIType.cstring },
     PyRun_SimpleString: { args: [FFIType.ptr], returns: FFIType.i32 },
     Py_FinalizeEx: { args: [], returns: FFIType.i32 },
-  });
+  } as const;
+  // The yolo fork opens the library RTLD_NOW|RTLD_GLOBAL with `{ global: true }`; stock Bun ignores the option.
+  const python = (
+    dlopen as (
+      path: string,
+      symbols: typeof symbols,
+      options?: { global?: boolean },
+    ) => ReturnType<typeof dlopen<typeof symbols>>
+  )(libpython, symbols, { global: true });
   const directory = mkdtempSync(join(tmpdir(), "vu-shared-"));
   const resultPath = join(directory, "result.txt");
   try {
     python.symbols.Py_InitializeEx(0);
     const version = String(python.symbols.Py_GetVersion()).split(" ")[0] ?? "";
     const prelude = [
-      "import sys, ctypes",
+      promote ? "import sys, ctypes" : "import sys",
       // bun:ffi maps the library RTLD_LOCAL; promote that same mapping to global so abi3 extensions (which do not link
-      // libpython) resolve their Py* symbols against it. A Bun fork that dlopens with RTLD_GLOBAL makes this a no-op.
-      `ctypes.CDLL(${JSON.stringify(libpython)}, mode=ctypes.RTLD_GLOBAL)`,
+      // libpython) resolve their Py* symbols against it. The yolo fork dlopens with RTLD_GLOBAL: no promotion needed.
+      promote ? `ctypes.CDLL(${JSON.stringify(libpython)}, mode=ctypes.RTLD_GLOBAL)` : "",
       site === undefined ? "" : `sys.path.insert(0, ${JSON.stringify(site)})`,
       `RESULT_PATH = ${JSON.stringify(resultPath)}`,
     ].join("\n");

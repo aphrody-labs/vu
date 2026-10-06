@@ -19,10 +19,11 @@ test("findLibpython reads the artifact's lib directory", () => {
 async function child(
   code: string,
   withSite: boolean,
+  fork?: string,
 ): Promise<{ code: number; out: string; err: string }> {
   const script = `import { runInSharedPython } from ${JSON.stringify(join(import.meta.dir, "shared-libpython.ts"))};
-console.log(JSON.stringify(runInSharedPython(${JSON.stringify(artifact)}, ${JSON.stringify(code)}${withSite ? `, ${JSON.stringify(site)}` : ""})));`;
-  const run = Bun.spawn(["bun", "-e", script], { stdout: "pipe", stderr: "pipe" });
+console.log(JSON.stringify(runInSharedPython(${JSON.stringify(artifact)}, ${JSON.stringify(code)}${withSite ? `, ${JSON.stringify(site)}` : ", undefined"}, { promote: ${fork === undefined} })));`;
+  const run = Bun.spawn([fork ?? "bun", "-e", script], { stdout: "pipe", stderr: "pipe" });
   const [out, err, exit] = await Promise.all([
     new Response(run.stdout).text(),
     new Response(run.stderr).text(),
@@ -56,6 +57,20 @@ test.skipIf(!present || site === undefined)(
       "from aphrody import aphrody_rust as r\nopen(RESULT_PATH, 'w').write(repr(r.cosine_similarity([1.0, 2.0], [1.0, 2.0])))";
     const run = await child(code, true);
     expect(run.err).not.toContain("Traceback");
+    expect(JSON.parse(run.out).value).toBe("1.0");
+  },
+);
+
+// The yolo fork opens the library RTLD_GLOBAL itself (`dlopen(..., { global: true })`, plan D18): no promotion from Python.
+// VU_TEST_BUN is the fork's engine link (the `bun` name of the yolo binary, argv0 selects the engine).
+const fork = process.env["VU_TEST_BUN"];
+test.skipIf(!present || site === undefined || fork === undefined)(
+  "yolo fork: the same end-to-end path works with no ctypes promotion",
+  async () => {
+    const code =
+      "from aphrody import aphrody_rust as r\nopen(RESULT_PATH, 'w').write(repr(r.cosine_similarity([1.0, 2.0], [1.0, 2.0])))";
+    const run = await child(code, true, fork);
+    expect(run.err).not.toContain("undefined symbol");
     expect(JSON.parse(run.out).value).toBe("1.0");
   },
 );

@@ -10,6 +10,7 @@
 //! Neither changes the environment of child processes: CPython finds its prefix from `argv[0]` in the first case,
 //! and from `PYTHONHOME`, set for the duration of the initialisation only, in the second.
 
+pub mod commands;
 pub mod launcher;
 
 use std::env;
