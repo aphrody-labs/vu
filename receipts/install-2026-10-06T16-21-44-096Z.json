@@ -1,0 +1,25 @@
+{
+  "schema": "aphrody.vu-install/1",
+  "at": "2026-10-06T16:21:44.096Z",
+  "source": {
+    "host": "vps",
+    "artifact": "/srv/aphrody-build/artifacts/vu/0.1.0-7c3db189",
+    "archiveSha256": "9ed9b8bede2eca3b12ded3de47d45cde9157de2f688a116329be7872ff9ba05b"
+  },
+  "home": "/home/aphro/.vu",
+  "installed": "/home/aphro/.vu/runtime/x86_64-unknown-linux-gnu/0.1.0-7c3db189",
+  "files": 3491,
+  "previous": null,
+  "activated": true,
+  "revision": "7c3db1890921babc0127eb3593e2c149b2786d8e",
+  "verification": "manifest: every file, link, target and CLI major",
+  "version": {
+    "schema": "aphrody.vu/1",
+    "vu": "0.1.0",
+    "uv": "uv 0.12.23 (46b84fd0b 2026-10-03 x86_64-unknown-linux-gnu)",
+    "ruff": "ruff 0.16.10",
+    "python": "3.12.15",
+    "pyo3": "0.29.3",
+    "target": "x86_64-unknown-linux-gnu"
+  }
+}

@@ -7,6 +7,7 @@
   "scripts": {
     "test": "bun test scripts",
     "fetch": "bun scripts/fetch.ts",
-    "assemble": "bun scripts/assemble.ts"
+    "assemble": "bun scripts/assemble.ts",
+    "install-runtime": "bun scripts/install.ts"
   }
 }
