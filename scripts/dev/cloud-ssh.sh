@@ -10,6 +10,14 @@
 #   --force               run outside a cloud session
 set -u
 [[ "${CLAUDE_CODE_REMOTE:-}" == "true" || "${1:-}" == "--force" ]] || exit 0
+# GitHub: git identity, HTTPS through the gh credential helper (the owner SSH alias github-dev does not exist here).
+git config --global user.name "aphrody-dev"
+git config --global user.email "contact@aphrody.com"
+git config --global url."https://github.com/".insteadOf "git@github-dev:"
+if [[ -n "${GH_TOKEN:-}" ]] && command -v gh >/dev/null 2>&1; then
+  git config --global credential.https://github.com.helper '!gh auth git-credential'
+  gh auth status >/dev/null 2>&1 && echo "cloud-ssh: gh authenticated" || echo "cloud-ssh: gh token rejected"
+fi
 key_b64="${APHRODY_SSH_KEY_B64:-${SHENRON_SSH_KEY_B64:-}}"
 vps="${APHRODY_VPS_HOST:-${SHENRON_VPS_HOST:-}}"
 dbfr="${APHRODY_DBFR_HOST:-${SHENRON_DBFR_HOST:-}}"
