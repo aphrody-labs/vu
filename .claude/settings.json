@@ -22,6 +22,18 @@
             "command": "bash \"$CLAUDE_PROJECT_DIR/scripts/dev/cloud-setup.sh\" --background",
             "timeout": 20,
             "statusMessage": "Cloud toolchain"
+          },
+          {
+            "type": "command",
+            "command": "bash \"$CLAUDE_PROJECT_DIR/scripts/dev/cloud-ssh.sh\"",
+            "timeout": 30,
+            "statusMessage": "SSH hosts"
+          },
+          {
+            "type": "command",
+            "command": "bun \"$CLAUDE_PROJECT_DIR/scripts/dev/session-start.ts\"",
+            "timeout": 30,
+            "statusMessage": "Resuming open work"
           }
         ]
       }

@@ -81,9 +81,31 @@ if ! have cargo-binstall; then
   run bash -c "curl -L --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh | bash"
 fi
 if have cargo-binstall || (( dry == 1 )); then
-  for pair in just:just sccache:sccache cargo-nextest:cargo-nextest nu:nu fd:fd-find rg:ripgrep bat:bat; do
+  for pair in just:just sccache:sccache cargo-nextest:cargo-nextest nu:nu fd:fd-find rg:ripgrep bat:bat sd:sd; do
     have "${pair%%:*}" || run cargo binstall -y --locked --disable-strategies compile "${pair##*:}"
   done
+fi
+# Where the proxy blocks api.github.com/graphql (cargo-binstall cannot resolve releases), the same cargo-quickinstall
+# archives are downloaded directly; the missing command lists come from config/developer-cli-tools.json and the
+# cargoTools of config/system-packages.json.
+if have bun || (( dry == 1 )); then
+  missing=""
+  for crate in nu choose du-dust dysk procs bottom zoxide git-delta xh tealdeer gitui just atuin starship zellij sccache \
+    cargo-nextest cargo-deny cargo-audit cargo-machete cargo-expand cargo-hack cargo-zigbuild cargo-xwin cargo-update hyperfine; do
+    case "$crate" in
+      du-dust) cmd=dust ;; bottom) cmd=btm ;; git-delta) cmd=delta ;; tealdeer) cmd=tldr ;;
+      cargo-update) cmd=cargo-install-update ;; *) cmd="$crate" ;;
+    esac
+    have "$cmd" || missing="$missing $crate"
+  done
+  [[ -z "$missing" ]] || run bun "$root/scripts/dev/cloud-quickinstall.ts" $missing
+fi
+# `sd` is required by the workspace code-edit tests; it is small, so compile it when no prebuilt binary is served.
+have sd || run cargo install sd --locked
+
+step "Bun lint and format tools (workspace gates)"
+if have bun || (( dry == 1 )); then
+  have oxlint && have oxfmt || run bun add -g oxlint oxfmt
 fi
 
 step "repository dependencies"
