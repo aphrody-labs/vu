@@ -59,6 +59,18 @@ link and `previous` the one a rollback returns to. `yolo py status` (Aphrody) re
 install writes `receipts/install-<time>.json` (schema `aphrody.vu-install/1`). The glibc ceiling of the artifact is 2.39.
 Nothing is published: the repository is private and no public channel is authorised for the runtime.
 
+## AI stack, Hugging Face, shared libpython (source and test state; see the plan, section 14)
+
+```sh
+bun scripts/hardware.ts                       # detect CUDA / ROCm / CPU (VU_ACCELERATOR overrides) and print the uv arguments
+bun scripts/huggingface.ts status             # HF_HOME, hub cache, endpoint, token presence (never the token)
+bun scripts/huggingface.ts download org/name config.json   # hub-compatible cache layout
+bun scripts/shared-libpython.ts <artifact> [--site <site-packages with the aphrody wheel>]   # Bun -> libpython -> Rust
+```
+
+Nothing here is a GPU validation: wheel resolution is checked with `uv pip install --dry-run --torch-backend cu128`; a run
+on real hardware needs its own measurement.
+
 ## Licence
 
 Apache-2.0 (`LICENSE`). Third-party components and their licences: `NOTICE`.
